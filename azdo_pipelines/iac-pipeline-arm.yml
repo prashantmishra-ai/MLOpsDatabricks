@@ -1,28 +1,28 @@
 trigger:
   branches:
     include:
-    - master
+      - master
   paths:
     include:
-    - iac/arm-templates/*
+      - iac/arm-templates/*
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: "ubuntu-latest"
 
 variables:
-  baseName: $[coalesce(variables['baseNameOverride'], 'mlopsdb')]
-  location: $[coalesce(variables['locationOverride'], 'westus2')]
+  baseName: $[coalesce(variables['baseNameOverride'], 'pmmlopsdb')]
+  location: $[coalesce(variables['locationOverride'], 'eastus')]
   azuresub: $[coalesce(variables['azuresubOverride'], 'davete02_sub')]
 
 steps:
-- task: AzureResourceGroupDeployment@2
-  inputs:
-    azureSubscription: $(azuresub)
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: '$(baseName)-AML-RG'
-    location: $(location)
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)/iac/arm-templates/cloud-environment.json'
-    overrideParameters: '-baseName $(baseName) -adbPricingTier standard'
-    deploymentMode: 'Incremental'
-  displayName: 'Deploy MLOps resources to Azure'
+  - task: AzureResourceGroupDeployment@2
+    inputs:
+      azureSubscription: $(azuresub)
+      action: "Create Or Update Resource Group"
+      resourceGroupName: "$(baseName)-AML-RG"
+      location: $(location)
+      templateLocation: "Linked artifact"
+      csmFile: "$(Build.SourcesDirectory)/iac/arm-templates/cloud-environment.json"
+      overrideParameters: "-baseName $(baseName) -adbPricingTier standard"
+      deploymentMode: "Incremental"
+    displayName: "Deploy MLOps resources to Azure"
